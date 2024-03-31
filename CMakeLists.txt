@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.27)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 11)
 
 include(cmake/configure_esp8266_toolchain.cmake)
 include(cmake/CPM.cmake)
@@ -13,7 +13,13 @@ setup_esp_freertos_sdk()
 project(filament-dryer-box)
 
 idf_build_get_property(IDF_PROJECT_EXECUTABLE EXECUTABLE)
-message(STATUS "IDF EXE IS ${IDF_PROJECT_EXECUTABLE}")
+#add_custom_command(
+#        TARGET ${IDF_PROJECT_EXECUTABLE}
+#        PRE_BUILD
+#        COMMAND "echo Hello"
+#        DEPENDS idf::bootloader
+#        COMMENT "bootloader dep"
+#)
 add_custom_command(
         TARGET ${IDF_PROJECT_EXECUTABLE}
         POST_BUILD

@@ -8,12 +8,19 @@ function(setup_esp_freertos_sdk)
             VERSION 3.4
             GITHUB_REPOSITORY espressif/ESP8266_RTOS_SDK
             DOWNLOAD_ONLY true
+            EXCLUDE_FROM_ALL true
+            OPTIONS
+                "CMAKE_TOOLCHAIN_FILE ${CMAKE_TOOLCHAIN_FILE}"
     )
     message(STATUS "ESP8266 SDK downloaded to ${esp-idf_SOURCE_DIR}")
-    message(STATUS "Applying CMake patch to ESP8266_RTOS_SDK...")
+    message(STATUS "Applying CMake patches to ESP8266_RTOS_SDK...")
     apply_git_patch(
             SRC_FOLDER ${esp-idf_SOURCE_DIR}
             PATCH_FILE "${CMAKE_SOURCE_DIR}/3rdparty/esp-idf-fix-GetGitRevisionDescription.patch"
+    )
+    apply_git_patch(
+            SRC_FOLDER ${esp-idf_SOURCE_DIR}
+            PATCH_FILE "${CMAKE_SOURCE_DIR}/3rdparty/esp-idf-disable-toolchain-override.patch"
     )
 
     set(ENV{IDF_PATH} "${esp-idf_SOURCE_DIR}")

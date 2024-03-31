@@ -1,0 +1,33 @@
+diff --git a/tools/cmake/targets.cmake b/tools/cmake/targets.cmake
+index be66d668..92eea8d9 100644
+--- a/tools/cmake/targets.cmake
++++ b/tools/cmake/targets.cmake
+@@ -49,7 +49,27 @@ macro(__target_set_toolchain)
+     idf_build_get_property(idf_path IDF_PATH)
+     # First try to load the toolchain file from the tools/cmake/directory of IDF
+     set(toolchain_file_global ${idf_path}/tools/cmake/toolchain-${IDF_TARGET}.cmake)
+-    if(EXISTS ${toolchain_file_global})
++
++    if (DEFINED CACHE{CMAKE_TOOLCHAIN_FILE})
++        message(WARNING "Custom CMake toolchain file is already defined as ${CMAKE_TOOLCHAIN_FILE}. Will not override global toolchain.")
++        if (EXISTS ${toolchain_file_global})
++            find_package(Git)
++            if (Git_FOUND)
++                message(WARNING "Diff between SDK toolchain file for target ${IDF_TARGET} (${toolchain_file_global}) and yours (${CMAKE_TOOLCHAIN_FILE}")
++                execute_process(
++                        COMMAND ${GIT_EXECUTABLE} "diff" "--no-index" "${toolchain_file_global}" "${CMAKE_TOOLCHAIN_FILE}"
++                        COMMAND_ECHO STDOUT
++                        OUTPUT_VARIABLE toolchain_diff_stdout
++                        OUTPUT_VARIABLE toolchain_diff_stderr
++                        ERROR_QUIET
++                )
++                message(STATUS "${toolchain_diff_stdout}")
++                message(WARNING "${toolchain_diff_stderr}")
++            endif()
++        endif()
++        # nothing to set
++
++    elseif(EXISTS ${toolchain_file_global})
+         set(CMAKE_TOOLCHAIN_FILE ${toolchain_file_global})
+     else()
+         __component_get_target(component_target ${IDF_TARGET})

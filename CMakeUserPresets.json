@@ -5,6 +5,21 @@
     "minor": 23,
     "patch": 0
   },
+  "configurePresets": [
+    {
+      "name": "xtensa_build_gnumake",
+      "inherits": ["xtensa_windows"],
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/gnumake",
+      "cacheVariables": {
+        "IDF_TARGET": "esp8266"
+      },
+      "environment": {
+        "IDF_TARGET": "esp8266"
+     },
+      "toolchainFile": "${sourceDir}/cmake/configure_esp8266_toolchain.cmake"
+    }
+  ],
   "buildPresets": [
     {
       "name": "xtensa_build_windows",
@@ -12,8 +27,23 @@
       "inheritConfigureEnvironment": true,
       "environment": {
         "PATH": "$env{VIRTUAL_ENV}/Scripts:$penv{PATH}",
-        "IDF_PATH": "${sourceDir}/build/default/_deps/esp8266_rtos_sdk-src"
-      }
+        "IDF_PATH": "${sourceDir}/build/default/_deps/esp-idf-src",
+        "ESPBAUD": "115200",
+        "ESPPORT": "COM5"
+      },
+      "verbose": true
+    },
+    {
+      "name": "xtensa_build_windows_gnumake",
+      "configurePreset": "xtensa_build_gnumake",
+      "inheritConfigureEnvironment": true,
+      "environment": {
+        "PATH": "$env{VIRTUAL_ENV}/Scripts:$penv{PATH}",
+        "IDF_PATH": "${sourceDir}/build/gnumake/_deps/esp-idf-src",
+        "ESPBAUD": "115200",
+        "ESPPORT": "COM5"
+      },
+      "verbose": true
     }
   ]
 }

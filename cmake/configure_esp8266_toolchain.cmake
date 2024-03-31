@@ -1,10 +1,10 @@
 message(STATUS "Configuring toolchain for ESP8266 (Xtensa L106)...")
 include(FetchContent)
 
-if (DEFINED CACHE{TOOLCHAIN_ROOT_DIR})
-    message(STATUS "GCC toolchain is already present, nothing to do")
-    return()
-endif()
+#if (DEFINED CACHE{TOOLCHAIN_ROOT_DIR})
+#    message(STATUS "GCC toolchain is already present, nothing to do")
+#    return()
+#endif()
 
 if (DEFINED $ENV{XTENSA_TOOLCHAIN_ROOT})
     file(TO_CMAKE_PATH "$ENV{XTENSA_TOOLCHAIN_ROOT}" TOOLCHAIN_ROOT_DIR_CANONICAL)
@@ -48,6 +48,14 @@ set(CMAKE_LINKER        "${TOOLCHAIN_ROOT_DIR}/bin/xtensa-lx106-elf-ld${TOOLCHAI
 set(CMAKE_OBJCOPY       "${TOOLCHAIN_ROOT_DIR}/bin/xtensa-lx106-elf-objcopy${TOOLCHAIN_EXE_SUFFIX}" CACHE INTERNAL "The objcopy binary to use for this target")
 set(CMAKE_OBJDUMP       "${TOOLCHAIN_ROOT_DIR}/bin/xtensa-lx106-elf-objdump${TOOLCHAIN_EXE_SUFFIX}" CACHE INTERNAL "The objdump binary to use for this target")
 set(CMAKE_GDB           "${TOOLCHAIN_ROOT_DIR}/bin/xtensa-lx106-elf-gdb${TOOLCHAIN_EXE_SUFFIX}" CACHE INTERNAL "The gdb binary to use for this target")
+
+set(CMAKE_C_FLAGS "-mlongcalls -Wno-frame-address" CACHE STRING "C Compiler Base Flags")
+set(CMAKE_CXX_FLAGS "-mlongcalls -Wno-frame-address" CACHE STRING "C++ Compiler Base Flags")
+
+# Can be removed after gcc 5.2.0 support is removed (ref GCC_NOT_5_2_0)
+set(CMAKE_EXE_LINKER_FLAGS "-nostdlib -Wl,--gc-sections" CACHE STRING "Linker Base Flags")
+
+set(CMAKE_SYSROOT ${TOOLCHAIN_ROOT_DIR} CACHE INTERNAL "The GCC sysroot")
 
 # where is the target environment located
 set(CMAKE_FIND_ROOT_PATH  ${TOOLCHAIN_ROOT_DIR})

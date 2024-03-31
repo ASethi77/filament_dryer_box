@@ -1,4 +1,4 @@
-idf_component_register(SRCS "filament_dryer_box_main.cpp")
+idf_component_register(SRCS "filament_dryer_box_main.c")
 
 #idf_component_get_property(cname main COMPONENT_NAME)
 #idf_component_get_property(clib main COMPONENT_LIB)
