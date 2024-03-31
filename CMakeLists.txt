@@ -20,3 +20,10 @@ add_custom_command(
         COMMAND "${CMAKE_OBJCOPY}" ARGS "-O" "ihex" "$<TARGET_FILE:${IDF_PROJECT_EXECUTABLE}>" "${PROJECT_BINARY_DIR}/${CMAKE_PROJECT_NAME}.hex"
         COMMENT "Creating .hex file from .elf"
 )
+add_custom_command(
+        TARGET ${IDF_PROJECT_EXECUTABLE}
+        DEPENDS "${PROJECT_BINARY_DIR}/${CMAKE_PROJECT_NAME}.hex"
+        POST_BUILD
+        COMMAND "${Python3_EXECUTABLE}" ARGS "${IDF_TOOLS_PATH}/idf_size.py" "--toolchain-prefix=xtensa-lx106-elf-" "${PROJECT_BINARY_DIR}/${CMAKE_PROJECT_NAME}.map"
+        COMMENT "Dumping section headers for .hex image"
+)
