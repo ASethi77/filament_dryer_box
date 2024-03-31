@@ -35,14 +35,6 @@ if (CMAKE_HOST_WIN32)
     set(TOOLCHAIN_EXE_SUFFIX ".exe" CACHE INTERNAL "whether to use .exe for Windows")
 endif()
 
-#if((NOT EXISTS $ENV{XTENSA_TOOLCHAIN_ROOT}) AND (NOT DEFINED CACHE{TOOLCHAIN_ROOT_DIR}))
-#    message(FATAL_ERROR "GCC toolchain path at ENV{XTENSA_TOOLCHAIN_ROOT} ($ENV{XTENSA_TOOLCHAIN_ROOT}) does not exist.")
-#else()
-#    file(TO_CMAKE_PATH "$ENV{XTENSA_TOOLCHAIN_ROOT}" TOOLCHAIN_ROOT_DIR_CANONICAL)
-#    set(TOOLCHAIN_ROOT_DIR ${TOOLCHAIN_ROOT_DIR_CANONICAL} CACHE INTERNAL "ESP GCC cross compiler toolchain root folder")
-#    message(STATUS "Found GCC toolchain root at ${TOOLCHAIN_ROOT_DIR}")
-#endif()
-
 set(CMAKE_PROGRAM_PATH "${CMAKE_PROGRAM_PATH};${TOOLCHAIN_ROOT_DIR}/bin" CACHE INTERNAL "CMake program search path")
 
 # the name of the target operating system
@@ -53,6 +45,9 @@ set(CMAKE_C_COMPILER    "${TOOLCHAIN_ROOT_DIR}/bin/xtensa-lx106-elf-gcc${TOOLCHA
 set(CMAKE_CXX_COMPILER  "${TOOLCHAIN_ROOT_DIR}/bin/xtensa-lx106-elf-g++${TOOLCHAIN_EXE_SUFFIX}" CACHE INTERNAL "The C++ compiler to use for this target")
 set(CMAKE_ASM_COMPILER  "${TOOLCHAIN_ROOT_DIR}/bin/xtensa-lx106-elf-as${TOOLCHAIN_EXE_SUFFIX}" CACHE INTERNAL "The ASM compiler to use for this target")
 set(CMAKE_LINKER        "${TOOLCHAIN_ROOT_DIR}/bin/xtensa-lx106-elf-ld${TOOLCHAIN_EXE_SUFFIX}" CACHE INTERNAL "The linker to use for this target")
+set(CMAKE_OBJCOPY       "${TOOLCHAIN_ROOT_DIR}/bin/xtensa-lx106-elf-objcopy${TOOLCHAIN_EXE_SUFFIX}" CACHE INTERNAL "The objcopy binary to use for this target")
+set(CMAKE_OBJDUMP       "${TOOLCHAIN_ROOT_DIR}/bin/xtensa-lx106-elf-objdump${TOOLCHAIN_EXE_SUFFIX}" CACHE INTERNAL "The objdump binary to use for this target")
+set(CMAKE_GDB           "${TOOLCHAIN_ROOT_DIR}/bin/xtensa-lx106-elf-gdb${TOOLCHAIN_EXE_SUFFIX}" CACHE INTERNAL "The gdb binary to use for this target")
 
 # where is the target environment located
 set(CMAKE_FIND_ROOT_PATH  ${TOOLCHAIN_ROOT_DIR})
@@ -65,6 +60,12 @@ set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 
-message(STATUS "C COMPILER IS ${CMAKE_C_COMPILER}")
-message(STATUS "CXX COMPILER IS ${CMAKE_CXX_COMPILER}")
-message(STATUS "ASM COMPILER IS ${CMAKE_ASM_COMPILER}")
+message(STATUS "\n================= Begin Toolchain Summary =================")
+message(STATUS "C COMPILER: ${CMAKE_C_COMPILER}")
+message(STATUS "CXX COMPILER: ${CMAKE_CXX_COMPILER}")
+message(STATUS "ASM COMPILER: ${CMAKE_ASM_COMPILER}")
+message(STATUS "LINKER: ${CMAKE_LINKER}")
+message(STATUS "GDB: ${CMAKE_GDB}")
+message(STATUS "OBJCOPY UTILITY: ${CMAKE_OBJCOPY}")
+message(STATUS "OBJDUMP UTILITY: ${CMAKE_OBJDUMP}")
+message(STATUS "================= End Toolchain Summary =================\n")
